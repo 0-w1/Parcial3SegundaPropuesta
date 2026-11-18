@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 /** Representa una actividad que pertenece a un proyecto. */
-public class Tarea {
+public class Tarea implements ElementoTarea {
 
     private String nombre;
     private String descripcion;
@@ -14,6 +14,7 @@ public class Tarea {
     private LocalDate fechaLimite;
     private EstadoTarea estado;
     private final List<Responsable> responsables;
+    private final List<ElementoTarea> subtareas;
 
     public Tarea(String nombre, String descripcion, Prioridad prioridad, LocalDate fechaLimite) {
         setNombre(nombre);
@@ -22,6 +23,7 @@ public class Tarea {
         this.fechaLimite = fechaLimite;
         this.estado = EstadoTarea.PENDIENTE;
         this.responsables = new ArrayList<>();
+        this.subtareas = new ArrayList<>();
     }
 
     public String getNombre() {
@@ -72,6 +74,57 @@ public class Tarea {
             throw new IllegalArgumentException("El estado es obligatorio");
         }
         this.estado = estado;
+    }
+
+
+    /** Agrega una subtarea. Una tarea puede contener otras tareas. */
+    public void agregarSubtarea(ElementoTarea subtarea) {
+        if (subtarea == null) {
+            throw new IllegalArgumentException("La subtarea no puede ser nula");
+        }
+        if (subtarea == this || contieneElemento(subtarea, this)) {
+            throw new IllegalArgumentException("No se puede crear una relación circular de tareas");
+        }
+        if (!subtareas.contains(subtarea)) {
+            subtareas.add(subtarea);
+        }
+    }
+
+    /** Elimina una subtarea directa. */
+    public boolean eliminarSubtarea(ElementoTarea subtarea) {
+        return subtareas.remove(subtarea);
+    }
+
+    /** Devuelve las subtareas directas sin permitir modificaciones externas. */
+    public List<ElementoTarea> getSubtareas() {
+        return Collections.unmodifiableList(subtareas);
+    }
+
+    @Override
+    public List<ElementoTarea> obtenerElementos() {
+        return getSubtareas();
+    }
+
+    /** Cuenta esta tarea y todas sus subtareas, incluyendo niveles internos. */
+    @Override
+    public int contarTareas() {
+        int total = 1;
+        for (ElementoTarea elemento : subtareas) {
+            total += elemento.contarTareas();
+        }
+        return total;
+    }
+
+    private boolean contieneElemento(ElementoTarea buscado, ElementoTarea actual) {
+        if (buscado == actual) {
+            return true;
+        }
+        for (ElementoTarea hijo : actual.obtenerElementos()) {
+            if (contieneElemento(buscado, hijo)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void agregarResponsable(Responsable responsable) {
