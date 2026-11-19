@@ -12,7 +12,7 @@ public class Tarea implements ElementoTarea {
     private String descripcion;
     private Prioridad prioridad;
     private LocalDate fechaLimite;
-    private EstadoTarea estado;
+    private EstadoTareaEstado estado;
     private final List<Responsable> responsables;
     private final List<ElementoTarea> subtareas;
 
@@ -21,7 +21,7 @@ public class Tarea implements ElementoTarea {
         setDescripcion(descripcion);
         setPrioridad(prioridad);
         this.fechaLimite = fechaLimite;
-        this.estado = EstadoTarea.PENDIENTE;
+        this.estado = new PendienteState();
         this.responsables = new ArrayList<>();
         this.subtareas = new ArrayList<>();
     }
@@ -65,15 +65,36 @@ public class Tarea implements ElementoTarea {
     }
 
     public EstadoTarea getEstado() {
-        return estado;
+        return estado.obtenerEstado();
     }
 
-    /** Por ahora permite asignar el estado; las reglas se incorporarán con State. */
-    public void setEstado(EstadoTarea estado) {
-        if (estado == null) {
+    /** Cambia el estado respetando las reglas del patrón State. */
+    public void setEstado(EstadoTarea nuevoEstado) {
+        if (nuevoEstado == null) {
             throw new IllegalArgumentException("El estado es obligatorio");
         }
-        this.estado = estado;
+        if (!estado.permiteCambiarA(nuevoEstado)) {
+            throw new IllegalStateException("No se permite pasar de " + getEstado() + " a " + nuevoEstado);
+        }
+        this.estado = crearEstado(nuevoEstado);
+    }
+
+    /** Restaura un estado previo al deshacer una operación del historial. */
+    public void restaurarEstado(EstadoTarea estadoAnterior) {
+        if (estadoAnterior == null) {
+            throw new IllegalArgumentException("El estado a restaurar es obligatorio");
+        }
+        this.estado = crearEstado(estadoAnterior);
+    }
+
+    private EstadoTareaEstado crearEstado(EstadoTarea estado) {
+        switch (estado) {
+            case PENDIENTE: return new PendienteState();
+            case EN_CURSO: return new EnCursoState();
+            case EN_REVISION: return new EnRevisionState();
+            case TERMINADA: return new TerminadaState();
+            default: throw new IllegalArgumentException("Estado no reconocido");
+        }
     }
 
 
@@ -142,6 +163,6 @@ public class Tarea implements ElementoTarea {
 
     @Override
     public String toString() {
-        return nombre + " - " + estado + " - Prioridad: " + prioridad;
+        return nombre + " - " + getEstado() + " - Prioridad: " + prioridad;
     }
 }
