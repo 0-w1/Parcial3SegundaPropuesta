@@ -15,6 +15,7 @@ public class Tarea implements ElementoTarea {
     private EstadoTareaEstado estado;
     private final List<Responsable> responsables;
     private final List<ElementoTarea> subtareas;
+    private final List<ObservadorTarea> observadores;
 
     public Tarea(String nombre, String descripcion, Prioridad prioridad, LocalDate fechaLimite) {
         setNombre(nombre);
@@ -24,6 +25,7 @@ public class Tarea implements ElementoTarea {
         this.estado = new PendienteState();
         this.responsables = new ArrayList<>();
         this.subtareas = new ArrayList<>();
+        this.observadores = new ArrayList<>();
     }
 
     public String getNombre() {
@@ -62,6 +64,7 @@ public class Tarea implements ElementoTarea {
 
     public void setFechaLimite(LocalDate fechaLimite) {
         this.fechaLimite = fechaLimite;
+        notificarObservadores("La fecha límite fue actualizada");
     }
 
     public EstadoTarea getEstado() {
@@ -76,7 +79,9 @@ public class Tarea implements ElementoTarea {
         if (!estado.permiteCambiarA(nuevoEstado)) {
             throw new IllegalStateException("No se permite pasar de " + getEstado() + " a " + nuevoEstado);
         }
+        EstadoTarea anterior = getEstado();
         this.estado = crearEstado(nuevoEstado);
+        notificarObservadores("El estado cambió de " + anterior + " a " + nuevoEstado);
     }
 
     /** Restaura un estado previo al deshacer una operación del historial. */
@@ -154,6 +159,25 @@ public class Tarea implements ElementoTarea {
         }
         if (!responsables.contains(responsable)) {
             responsables.add(responsable);
+        }
+    }
+
+    public boolean eliminarResponsable(Responsable responsable) {
+        return responsables.remove(responsable);
+    }
+
+    public void agregarObservador(ObservadorTarea observador) {
+        if (observador == null) throw new IllegalArgumentException("El observador no puede ser nulo");
+        if (!observadores.contains(observador)) observadores.add(observador);
+    }
+
+    public void eliminarObservador(ObservadorTarea observador) {
+        observadores.remove(observador);
+    }
+
+    private void notificarObservadores(String mensaje) {
+        for (ObservadorTarea observador : new ArrayList<>(observadores)) {
+            observador.actualizar(this, mensaje);
         }
     }
 
