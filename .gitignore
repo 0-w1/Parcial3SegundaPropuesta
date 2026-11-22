@@ -1,0 +1,11 @@
+# Compilación
+out/
+target/
+build/
+build-verificacion/
+*.class
+
+# IDE
+.idea/
+.vscode/
+*.iml
