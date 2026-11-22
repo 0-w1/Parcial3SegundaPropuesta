@@ -1,0 +1,21 @@
+@startuml
+interface Comando {
+  + ejecutar() : void
+  + deshacer() : void
+}
+class CambiarEstadoCommand
+class CambiarNombreTareaCommand
+class GestorComandos {
+  - deshacer : Deque<Comando>
+  - rehacer : Deque<Comando>
+  + ejecutar(comando : Comando) : void
+  + deshacer() : boolean
+  + rehacer() : boolean
+}
+class Tarea
+Comando <|.. CambiarEstadoCommand
+Comando <|.. CambiarNombreTareaCommand
+GestorComandos o-- "0..*" Comando : historial
+CambiarEstadoCommand --> Tarea
+CambiarNombreTareaCommand --> Tarea
+@enduml

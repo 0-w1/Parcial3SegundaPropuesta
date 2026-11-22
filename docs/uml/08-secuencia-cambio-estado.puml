@@ -1,0 +1,21 @@
+@startuml
+actor Usuario
+participant VentanaPrincipal
+participant GestorComandos
+participant CambiarEstadoCommand
+participant Tarea
+participant EstadoTareaEstado
+participant ObservadorInterfaz
+Usuario -> VentanaPrincipal : Selecciona tarea y nuevo estado
+VentanaPrincipal -> GestorComandos : ejecutar(comando)
+GestorComandos -> CambiarEstadoCommand : ejecutar()
+CambiarEstadoCommand -> Tarea : getEstado()
+CambiarEstadoCommand -> Tarea : setEstado(nuevoEstado)
+Tarea -> EstadoTareaEstado : permiteCambiarA(nuevoEstado)
+EstadoTareaEstado --> Tarea : permitido
+Tarea -> ObservadorInterfaz : actualizar(tarea, mensaje)
+Tarea --> CambiarEstadoCommand : cambio aplicado
+CambiarEstadoCommand --> GestorComandos : fin
+GestorComandos --> VentanaPrincipal : historial actualizado
+VentanaPrincipal --> Usuario : Actualiza tabla y registro
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+interface ElementoTarea {
+  + getNombre() : String
+  + obtenerElementos() : List<ElementoTarea>
+  + contarTareas() : int
+}
+class Tarea {
+  - subtareas : List<ElementoTarea>
+  + agregarSubtarea(subtarea : ElementoTarea) : void
+  + eliminarSubtarea(subtarea : ElementoTarea) : boolean
+  + contarTareas() : int
+}
+Tarea ..|> ElementoTarea
+Tarea "1" *-- "0..*" ElementoTarea : hijos
+note right of Tarea : Tarea es el Composite y también\npuede actuar como hoja cuando\nno tiene subtareas.
+@enduml

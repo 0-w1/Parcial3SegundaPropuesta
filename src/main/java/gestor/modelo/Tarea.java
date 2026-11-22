@@ -108,7 +108,7 @@ public class Tarea implements ElementoTarea {
         if (subtarea == null) {
             throw new IllegalArgumentException("La subtarea no puede ser nula");
         }
-        if (subtarea == this || contieneElemento(subtarea, this)) {
+        if (subtarea == this || contieneElemento(this, subtarea)) {
             throw new IllegalArgumentException("No se puede crear una relación circular de tareas");
         }
         if (!subtareas.contains(subtarea)) {

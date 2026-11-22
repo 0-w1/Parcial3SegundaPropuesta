@@ -1,0 +1,89 @@
+@startuml
+skinparam classAttributeIconSize 0
+package "gestor.modelo" {
+  class Proyecto {
+    - nombre : String
+    - descripcion : String
+    - fechaCreacion : LocalDate
+    - tareas : List<Tarea>
+    + agregarTarea(tarea : Tarea) : void
+    + getTareas() : List<Tarea>
+  }
+  class Tarea {
+    - nombre : String
+    - descripcion : String
+    - prioridad : Prioridad
+    - fechaLimite : LocalDate
+    - estado : EstadoTareaEstado
+    - responsables : List<Responsable>
+    - subtareas : List<ElementoTarea>
+    - observadores : List<ObservadorTarea>
+    + setEstado(nuevoEstado : EstadoTarea) : void
+    + agregarSubtarea(subtarea : ElementoTarea) : void
+    + contarTareas() : int
+    + agregarResponsable(responsable : Responsable) : void
+    + agregarObservador(observador : ObservadorTarea) : void
+  }
+  interface ElementoTarea {
+    + obtenerElementos() : List<ElementoTarea>
+    + contarTareas() : int
+  }
+  class Responsable
+  enum Prioridad
+  enum EstadoTarea
+  interface EstadoTareaEstado {
+    + obtenerEstado() : EstadoTarea
+    + permiteCambiarA(nuevoEstado : EstadoTarea) : boolean
+  }
+  class PendienteState
+  class EnCursoState
+  class EnRevisionState
+  class TerminadaState
+  interface ObservadorTarea {
+    + actualizar(tarea : Tarea, mensaje : String) : void
+  }
+  class NotificadorConsola
+  class "ObservadorInterfaz" as ObservadorInterfaz
+  class PlantillaTareaFactory {
+    {abstract} + crearTarea(nombre : String, fechaLimite : LocalDate) : Tarea
+  }
+  class TareaBasicaFactory
+  class TareaUrgenteFactory
+  class BuscadorTareas
+  class ServicioRecordatorios
+}
+package "gestor.modelo.comando" {
+  interface Comando {
+    + ejecutar() : void
+    + deshacer() : void
+  }
+  class CambiarEstadoCommand
+  class CambiarNombreTareaCommand
+  class GestorComandos
+}
+package "gestor.gui" {
+  class VentanaPrincipal
+}
+Proyecto "1" o-- "0..*" Tarea
+Tarea ..|> ElementoTarea
+Tarea "1" *-- "0..*" ElementoTarea : subtareas
+Tarea "0..*" --> "0..*" Responsable
+Tarea --> EstadoTareaEstado : estado actual
+EstadoTareaEstado <|.. PendienteState
+EstadoTareaEstado <|.. EnCursoState
+EstadoTareaEstado <|.. EnRevisionState
+EstadoTareaEstado <|.. TerminadaState
+Tarea "1" o-- "0..*" ObservadorTarea
+ObservadorTarea <|.. NotificadorConsola
+ObservadorTarea <|.. ObservadorInterfaz
+PlantillaTareaFactory <|-- TareaBasicaFactory
+PlantillaTareaFactory <|-- TareaUrgenteFactory
+Comando <|.. CambiarEstadoCommand
+Comando <|.. CambiarNombreTareaCommand
+GestorComandos o-- Comando
+CambiarEstadoCommand --> Tarea
+CambiarNombreTareaCommand --> Tarea
+VentanaPrincipal --> Proyecto
+VentanaPrincipal --> GestorComandos
+VentanaPrincipal --> ObservadorInterfaz
+@enduml

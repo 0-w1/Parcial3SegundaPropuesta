@@ -1,0 +1,16 @@
+@startuml
+interface ObservadorTarea {
+  + actualizar(tarea : Tarea, mensaje : String) : void
+}
+class NotificadorConsola
+class ObservadorInterfaz
+class Tarea {
+  - observadores : List<ObservadorTarea>
+  + agregarObservador(observador : ObservadorTarea) : void
+  + eliminarObservador(observador : ObservadorTarea) : void
+  - notificarObservadores(mensaje : String) : void
+}
+ObservadorTarea <|.. NotificadorConsola
+ObservadorTarea <|.. ObservadorInterfaz
+Tarea "1" o-- "0..*" ObservadorTarea : notifica
+@enduml

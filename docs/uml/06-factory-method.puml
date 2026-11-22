@@ -1,0 +1,12 @@
+@startuml
+abstract class PlantillaTareaFactory {
+  {abstract} + crearTarea(nombre : String, fechaLimite : LocalDate) : Tarea
+}
+class TareaBasicaFactory
+class TareaUrgenteFactory
+class Tarea
+PlantillaTareaFactory <|-- TareaBasicaFactory
+PlantillaTareaFactory <|-- TareaUrgenteFactory
+TareaBasicaFactory ..> Tarea : crea prioridad MEDIA
+TareaUrgenteFactory ..> Tarea : crea prioridad ALTA
+@enduml

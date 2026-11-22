@@ -1,0 +1,21 @@
+@startuml
+interface EstadoTareaEstado {
+  + obtenerEstado() : EstadoTarea
+  + permiteCambiarA(nuevoEstado : EstadoTarea) : boolean
+}
+class PendienteState
+class EnCursoState
+class EnRevisionState
+class TerminadaState
+class Tarea {
+  - estado : EstadoTareaEstado
+  + getEstado() : EstadoTarea
+  + setEstado(nuevoEstado : EstadoTarea) : void
+  - crearEstado(estado : EstadoTarea) : EstadoTareaEstado
+}
+EstadoTareaEstado <|.. PendienteState
+EstadoTareaEstado <|.. EnCursoState
+EstadoTareaEstado <|.. EnRevisionState
+EstadoTareaEstado <|.. TerminadaState
+Tarea --> EstadoTareaEstado : delega reglas a
+@enduml

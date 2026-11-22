@@ -1,0 +1,28 @@
+@startuml
+left to right direction
+actor "Usuario" as U
+rectangle "Gestor de Tareas y Proyectos" {
+  usecase "Crear proyecto" as UC1
+  usecase "Crear tarea" as UC2
+  usecase "Consultar tareas" as UC3
+  usecase "Filtrar tareas" as UC4
+  usecase "Cambiar estado" as UC5
+  usecase "Deshacer acción" as UC6
+  usecase "Rehacer acción" as UC7
+  usecase "Consultar recordatorios" as UC8
+  usecase "Asignar responsable" as UC9
+  usecase "Agregar subtareas" as UC10
+  usecase "Recibir notificaciones\n de cambios" as UC11
+}
+U --> UC1
+U --> UC2
+U --> UC3
+U --> UC4
+U --> UC5
+U --> UC6
+U --> UC7
+U --> UC8
+U --> UC9
+U --> UC10
+UC5 .> UC11 : <<include>>
+@enduml
