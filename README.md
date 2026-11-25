@@ -100,3 +100,19 @@ El informe de la jornada 6 está en `docs/CIERRE_DIA6.md`. Los diagramas UML edi
 ## Diagramas UML
 
 Los ocho archivos `.puml` de `docs/uml/` corresponden a casos de uso, clases generales, los cinco patrones y una secuencia de cambio de estado. Se pueden abrir o renderizar con PlantUML. Se mantienen como fuentes editables para facilitar ajustes si cambia el código.
+
+
+
+
+
+## Declaración de uso de inteligencia artificial
+
+Durante el desarrollo de este proyecto se utilizó inteligencia artificial como herramienta de apoyo en el proceso de programación y construcción del sistema.
+
+El uso de esta herramienta se concentró principalmente en el desarrollo del modelo del proyecto, especialmente en la organización de las clases, la implementación de la lógica del sistema y la aplicación de los patrones de diseño utilizados: Composite, State, Command, Factory Method y Observer.
+
+También se utilizó como apoyo en menor medida durante el desarrollo de la interfaz gráfica, principalmente para orientar la organización de sus componentes y la implementación de algunas funcionalidades visuales.
+
+La inteligencia artificial fue utilizada como recurso de consulta y asistencia durante el desarrollo, mientras que el código generado y las sugerencias recibidas fueron revisados e integrados en el proyecto como parte del proceso de construcción y ajuste del software.
+
+Se reconoce el uso de esta herramienta como apoyo al desarrollo del proyecto, sin presentarla como autora única del trabajo.
